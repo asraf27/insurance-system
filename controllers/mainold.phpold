@@ -1,0 +1,691 @@
+<?php
+/**
+ * @author :)
+ * @copyright 2019
+ */
+class main
+	{
+
+		var $controler_name;
+		var $action;
+		var $my_db;
+		var $my_session;
+		var $user_id;
+		var $user_type;
+		var $page_title;
+		var $meta_keywords;
+		var $meta_description;
+        var $error;
+		var $message;
+		var $history;
+		var $newMail;
+		var $gerbage;
+
+				
+		function __construct()
+
+		{
+			global $db,$session;
+			$this->my_db = $db;
+			$this->my_session = $session;								
+			$this->controler_name = 'main';
+			$this->user_id = state('user_id');
+
+            $this->error = state('err');
+            $this->message = state('msg');
+            $this->history = state('hst');
+
+            state('err' , '');
+            state('msg' , '');
+            state('hst' , '');
+
+            $this->action = 'default';
+
+		}
+
+		function default_func($params = array()){	
+         /*$check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         require(COMMON_TEMPLATES.'header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/home.tpl.php');	
+		 require(COMMON_TEMPLATES.'footer.tpl.php');
+         $this->footer = 0;*/
+         $this->health($params);
+		}
+        
+        function health($params = array()){	 
+                
+         $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         require(COMMON_TEMPLATES.'user.header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/health.tpl.php');	
+		 require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+        
+        function health_new($params = array()){	 
+            
+         $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         require(COMMON_TEMPLATES.'user.header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/health.new.tpl.php');	
+		 require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+        
+        function health_edit($params = array()){	 
+         global $policyInfo,$userSideBar;
+         $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+         
+         //print_r($params);
+         $policyInfo = getSinglePolicy($params[0]);
+         //print_r($policyInfo);
+         
+         $userSideBar = "health.left.tpl.php";
+         require(COMMON_TEMPLATES.'user.header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/health.edit.tpl.php');	
+		 require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+        
+        function rate_up($params = array()){
+        global $insuredInfo,$insuredLists;
+         
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+         $insured_id = $params[0];
+         
+         $insuredInfo = getHealthSingleInsured($insured_id);
+         if($insuredInfo){
+          $policy_id = $insuredInfo['idpolicy']; 
+          //if($policy_id)
+          //$insuredLists = getHealthInsuredLists($policy_id);
+         }
+         
+         require(COMMON_TEMPLATES.'user.header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/rate.up.tpl.php');	
+		 require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+        
+       
+       function cancel_notice_claria($params = array()){
+        global $policyInfo;
+        
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+        $policy_id = $params[0];
+        if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+            require(TEMPLATE_STORE.$this->controler_name.'/cancel-notice-claria.tpl.php');
+            
+        }
+       }
+       
+       function approval_sheet_claria($params = array()){
+        global $policyInfo;
+        
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+        $policy_id = $params[0];
+        if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+            require(TEMPLATE_STORE.$this->controler_name.'/approval-sheet-claria.tpl.php');
+            
+        }
+       }
+       
+       function reinstatement_sheet_claria($params = array()){
+        global $policyInfo;
+        
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+        $policy_id = $params[0];
+        if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+            require(TEMPLATE_STORE.$this->controler_name.'/reinstatement-sheet-claria.tpl.php');
+            
+        }
+       }
+       
+       
+       function ninety_day_waiver_print_claria($params = array()){
+        global $policyInfo;
+        
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+        $policy_id = $params[0];
+        if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+            require(TEMPLATE_STORE.$this->controler_name.'/ninety-day-waiver-print-claria.tpl.php');
+            
+        }
+       }
+        
+     function  print_policy($params = array()){
+        global $policyInfo,$insuredInfo,$insuredLists;
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+        $policy_id = $params[0];
+        if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+        }
+        require(COMMON_TEMPLATES.'user.header.tpl.php');
+	    require(TEMPLATE_STORE.$this->controler_name.'/print-policy.tpl.php');	
+	    require(COMMON_TEMPLATES.'user.footer.tpl.php');
+     }
+     
+     function policy_print($params = array()){
+        global $policyInfo,$insuredInfo,$insuredLists;
+         
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+         $policy_id = $params[0];
+         
+         if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+            require(TEMPLATE_STORE.$this->controler_name.'/policy-print.tpl.php');
+         }
+         
+		 
+     }
+     
+     function claria_express($params = array()){
+        global $policyInfo,$insuredInfo,$insuredLists;
+         
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+         $policy_id = $params[0];
+         
+         if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+            require(TEMPLATE_STORE.$this->controler_name.'/claria_express.tpl.php');
+         }
+         
+		 
+     }
+     
+     
+     function delivery_request_main($params = array()){
+        global $policyInfo;
+        
+        $check_login = checkLoggedIn();	
+        if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+        }
+         
+        $policy_id = $params[0];
+        if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+            
+            
+        }
+        require(COMMON_TEMPLATES.'user.header.tpl.php');
+	    require(TEMPLATE_STORE.$this->controler_name.'/delivery-request-main.tpl.php');	
+	    require(COMMON_TEMPLATES.'user.footer.tpl.php');
+       }
+       
+       
+       function new_delivery_request($params = array()){	 
+         global $policyInfo,$delivery_req_number,$dreq_id; 
+         $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+         $policy_id = $params[0];
+         
+         $dreq_submit = $this->my_db->post('dreq_submit');
+         if($dreq_submit){
+         $delivery_req_number = $formData['dreqnumber'] = $this->my_db->post('delivery_req_number');
+         $formData['idpolicy'] = $this->my_db->post('policy_num');
+         $formData['datesent'] = date("Y-m-d",strtotime($this->my_db->post('drq_date_sent')));
+         $formData['detail'] = $this->my_db->post('dreq_details');
+         $formData['status'] = $this->my_db->post('dreq_status');
+         $dreq_id = $this->my_db->post('dreq_num');
+         saveDeliveryReq($dreq_id,$formData);
+         urlredirect(THE_URL."main/delivery-request-main/".$policy_id);	
+         exit;
+         }
+         
+        
+         if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);  
+         }
+        
+         if($policyInfo && !$delivery_req_number){
+           $dreq_id = createNewDeliveryReq($policyInfo['id']); 
+           if($dreq_id)
+           $delivery_req_number = generateDreqNumber($dreq_id,$policyInfo['policynumber']);
+         }
+        
+         require(COMMON_TEMPLATES.'user.header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/new-delivery-request.tpl.php');	
+		 require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+        
+        function delivery_request_edit($params = array()){	 
+         global $policyInfo,$delivery_req_info; 
+         $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+         $policy_id = $params[0];
+         $dreq_id = $params[1];
+         
+         $dreq_submit = $this->my_db->post('dreq_submit');
+         if($dreq_submit){
+         $delivery_req_number = $formData['dreqnumber'] = $this->my_db->post('delivery_req_number');
+         $formData['idpolicy'] = $this->my_db->post('policy_num');
+         $formData['datesent'] = date("Y-m-d",strtotime($this->my_db->post('drq_date_sent')));
+         $formData['detail'] = $this->my_db->post('dreq_details');
+         $formData['status'] = $this->my_db->post('dreq_status');
+         $dreq_id = $this->my_db->post('dreq_num');
+         saveDeliveryReq($dreq_id,$formData);
+         urlredirect(THE_URL."main/delivery-request-main/".$policy_id);	
+         exit;
+         }
+         
+        
+         if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);  
+         }
+        
+         if($policyInfo){
+           $delivery_req_info = getDeliveryRequest($dreq_id);
+         }
+        
+         require(COMMON_TEMPLATES.'user.header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/delivery-request-edit.tpl.php');	
+		 require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+        
+        
+   function delivery_request_delete($params = array()){
+     $dreq_id = $params[0];
+     $policy_id = $params[1];
+     if($dreq_id){
+        deleteDeliveryReq($dreq_id);
+     }
+     
+     urlredirect(THE_URL."main/delivery-request-main/".$policy_id);	
+     exit; 
+    } 
+    
+    function delivery_request_print_claria($params = array()){
+        global $policyInfo;
+        
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+        $policy_id = $params[0];
+        if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+            require(TEMPLATE_STORE.$this->controler_name.'/delivery-request-print-claria.tpl.php');
+            
+        }
+     }
+     
+     function delivery_request_print_claria_sp($params = array()){
+        global $policyInfo;
+        
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+        $policy_id = $params[0];
+        if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+            require(TEMPLATE_STORE.$this->controler_name.'/delivery-request-print-claria-sp.tpl.php');
+            
+        }
+     }
+     
+     function rate_up_print($params = array()){
+        global $insuredInfo,$insuredLists;
+         
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+         $insured_id = $params[0];
+         
+         $insuredInfo = getHealthSingleInsured($insured_id);
+         if($insuredInfo){
+          $policy_id = $insuredInfo['idpolicy']; 
+          //if($policy_id)
+          //$insuredLists = getHealthInsuredLists($policy_id);
+          require(TEMPLATE_STORE.$this->controler_name.'/rate-up-print.tpl.php');
+         }
+         
+		 
+		}
+    
+
+        ####################### Faroque's code starts here ########################
+    
+        function rider($params = array())
+        {
+            global $insuredInfo,$insuredLists , $riderList;
+            
+            $check_login = checkLoggedIn();	
+            if(!($check_login && $check_login['user_type']==1))
+            {
+                urlredirect(THE_URL."auth/login");	
+                exit;
+            }
+            
+            $insured_id = $params[0];
+            
+            $insuredInfo = getHealthSingleInsured($insured_id);
+            if($insuredInfo)
+            {
+                $policy_id = $insuredInfo['idpolicy']; 
+                //if($policy_id)
+                //$insuredLists = getHealthInsuredLists($policy_id);
+            }
+            
+            
+            if($insured_id > 0)
+            {
+                $riderList = $this->my_db->getRowsArray('rider' , "insured_id=$insured_id");                
+            }
+           
+            require(COMMON_TEMPLATES.'user.header.tpl.php');
+            require(TEMPLATE_STORE.$this->controler_name.'/rider.tpl.php');	
+            require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+        
+        function rider_new($params = array())
+        {
+            global $insuredInfo,$insuredLists , $riderInfo;
+            
+            $check_login = checkLoggedIn();	
+            if(!($check_login && $check_login['user_type']==1))
+            {
+                urlredirect(THE_URL."auth/login");	
+                exit;
+            }
+            
+            $insured_id = $params[0];
+            $rider_id = $params[1];
+            
+            $insuredInfo = getHealthSingleInsured($insured_id);
+            if($insuredInfo)
+            {
+                $policy_id = $insuredInfo['idpolicy'];
+            }
+            
+            if($rider_id)
+            {
+                $riderInfo = $this->my_db->pickRow('rider' , 'id' , $rider_id , 1);                
+            }
+           
+            require(COMMON_TEMPLATES.'user.header.tpl.php');
+            require(TEMPLATE_STORE.$this->controler_name.'/rider_new.tpl.php');	
+            require(COMMON_TEMPLATES.'user.footer.tpl.php');
+        }
+        
+        function rider_save($params = array())
+        {
+            global $insuredInfo,$insuredLists;
+            
+            
+            $insured_id = $this->my_db->post('insured_id');
+            $id = $this->my_db->post('id');
+            
+            
+            $formData['rider_number'] = $this->my_db->post('rider_number');
+            $formData['insured_id'] = $this->my_db->post('insured_id');
+            $formData['name'] = $this->my_db->post('name');
+            $formData['title'] = $this->my_db->post('title');
+            
+            $formData['status'] = $this->my_db->post('status');
+            $formData['details'] = $this->my_db->post('details');            
+            
+            $formData['date_sent'] = date("Y-m-d",strtotime($this->my_db->post('date_sent')));
+            
+            
+            //print_r($formData);
+            
+            if($id)
+                $this->my_db->doUpdate($formData , 'rider' , "id = " . $id , 1);
+            else
+                $id = $this->my_db->doInsert($formData , 'rider' , 1);
+            
+            //urlredirect(THE_URL."main/rider_new/$insured_id/$id");
+            
+            urlredirect(THE_URL."main/rider/$insured_id");            
+            exit;
+        }
+        
+        function rider_refresh($params = array())
+        {
+            
+        }
+        
+        function manual_rate($params = array())
+        {
+            global $rateInfo ;            
+            $check_login = checkLoggedIn();	
+            if(!($check_login && $check_login['user_type']==1))
+            {
+                urlredirect(THE_URL."auth/login");	
+                exit;
+            }
+            
+            $insured_id = $params[0];            
+            if($insured_id)
+            {
+                $rateInfo = $this->my_db->pickRow('manual_rate' , 'insured_id' , $insured_id );                
+                if(!$rateInfo)
+                    $rateInfo['insured_id'] = $insured_id;
+            }
+            require(COMMON_TEMPLATES.'user.header.tpl.php');
+            require(TEMPLATE_STORE.$this->controler_name.'/manualrate.tpl.php');	
+            require(COMMON_TEMPLATES.'user.footer.tpl.php');
+        }
+        
+        function manual_rate_save($params = array())
+        {
+            global $insuredInfo,$insuredLists;           
+            
+            $insured_id = $this->my_db->post('insured_id');
+            $id = $this->my_db->post('id');
+               
+            $formData['insured_id'] = $this->my_db->post('insured_id');         
+            $formData['first_name'] = $this->my_db->post('first_name');
+            $formData['last_name'] = $this->my_db->post('last_name');
+            $formData['base_premium'] = $this->my_db->post('base_premium');
+            $formData['total_premium'] = $this->my_db->post('total_premium');            
+            
+            if($id)
+                $this->my_db->doUpdate($formData , 'manual_rate' , "id = " . $id);
+            else
+                $id = $this->my_db->doInsert($formData , 'manual_rate',1);
+            
+            
+            $insuredInfo = getHealthSingleInsured($insured_id);
+            if($insuredInfo)
+            {
+                $policy_id = $insuredInfo['idpolicy'];
+            }            
+            
+            urlredirect(THE_URL."main/health-edit/$policy_id");            
+            exit;
+        }
+        
+        
+        function duplicate_policy($params = array()){
+         global $policyInfo;
+         
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+         $policy_id = $params[0];
+         
+      
+         if($policy_id){
+          $policyInfo = getSinglePolicy($policy_id);
+          //if($policy_id)
+          //$insuredLists = getHealthInsuredLists($policy_id);
+         }
+         
+         require(COMMON_TEMPLATES.'user.header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/duplicate.policy.tpl.php');	
+		 require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+
+
+        ###########################################################################
+        
+        function add_rate($params = array()){
+        global $insuredInfo,$insuredLists,$policyInfo;
+         
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+         $insured_id = $params[0];
+         
+         $insuredInfo = getHealthSingleInsured($insured_id);
+         if($insuredInfo){
+          $policy_id = $insuredInfo['idpolicy']; 
+          //if($policy_id)
+          //$insuredLists = getHealthInsuredLists($policy_id);
+         }
+         
+         require(COMMON_TEMPLATES.'user.header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/add-rate.tpl.php');	
+		 require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+        
+        function  calculate_premium($params = array()){
+        global $policyInfo,$insuredInfo,$insuredLists;
+        $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+        $policy_id = $params[0];
+        if($policy_id){
+            $policyInfo = getSinglePolicy($policy_id);
+        }
+        require(COMMON_TEMPLATES.'user.header.tpl.php');
+	    require(TEMPLATE_STORE.$this->controler_name.'/calculate-premium.tpl.php');	
+	    require(COMMON_TEMPLATES.'user.footer.tpl.php');
+     }
+     
+     function mexico_rate_save($params = array())
+        {
+            global $insuredInfo,$insuredLists;           
+            
+            //$id = $this->my_db->post('id');
+               
+            $formData['plan'] = $this->my_db->post('plan');         
+            $formData['coverage'] = $this->my_db->post('coverage');
+            $formData['deductible'] = $this->my_db->post('deductible');
+            $formData['deductiblearea'] = $this->my_db->post('deductiblearea');
+            $formData['age'] = $this->my_db->post('age');
+            $formData['premium'] = $this->my_db->post('premium');            
+            $formData['rate_country'] = $this->my_db->post('rate_country');            
+            $formData['rate_year'] = $this->my_db->post('rate_year');            
+            
+            
+            $id = $this->my_db->doInsert($formData , 'rate_table_mundial',1);            
+            
+            urlredirect(THE_URL."main/add-rate");            
+            exit;
+        }
+        
+        function delete_policy($params = array()){
+        
+         
+         $check_login = checkLoggedIn();	
+         if(!($check_login && $check_login['user_type']==1)){
+            urlredirect(THE_URL."auth/login");	
+            exit;
+         }
+         
+        $delete_submit = $this->my_db->get_post('delete_submit');
+        $policy_id = $this->my_db->get_post('policy_uid');
+         
+        if($delete_submit){
+         if($policy_id){
+          $policyInfo = getSinglePolicy($policy_id);
+          if($policyInfo){
+            $status = deleteHealthPolicy($policy_id);
+            if($status)
+            state('msg' , 'Policy successfully deleted.');
+            else
+            state('err' , 'Failed to delete policy. Please try again.');
+          }
+         }
+         }
+         require(COMMON_TEMPLATES.'user.header.tpl.php');
+		 require(TEMPLATE_STORE.$this->controler_name.'/delete.policy.tpl.php');	
+		 require(COMMON_TEMPLATES.'user.footer.tpl.php');
+		}
+
+
+	}
+?>
